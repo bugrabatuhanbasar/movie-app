@@ -1,21 +1,30 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { Movie } from '@/types/tmdb';
+import { Movie, TVShow } from '@/types/tmdb';
 import { getImageUrl, getYear } from '@/lib/tmdb-client';
 
 interface MovieCardProps {
-  movie: Movie;
+  movie: Movie | TVShow;
+  mediaType?: 'movie' | 'tv';
 }
 
-export default function MovieCard({ movie }: MovieCardProps) {
+function isMovie(item: Movie | TVShow): item is Movie {
+  return 'title' in item;
+}
+
+export default function MovieCard({ movie, mediaType }: MovieCardProps) {
+  const title = isMovie(movie) ? movie.title : movie.name;
+  const releaseDate = isMovie(movie) ? movie.release_date : movie.first_air_date;
+  const type = mediaType || (isMovie(movie) ? 'movie' : 'tv');
+
   return (
-    <Link href={`/movie/${movie.id}`}>
+    <Link href={`/${type}/${movie.id}`}>
       <div className="group cursor-pointer">
         <div className="relative aspect-[2/3] overflow-hidden rounded-lg bg-zinc-800">
           {movie.poster_path ? (
             <Image
               src={getImageUrl(movie.poster_path, 'w500')}
-              alt={movie.title}
+              alt={title}
               fill
               sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
               className="object-cover transition-transform duration-300 group-hover:scale-110"
@@ -36,14 +45,23 @@ export default function MovieCard({ movie }: MovieCardProps) {
               </span>
             </div>
           </div>
+
+          {/* Media type badge */}
+          {mediaType && (
+            <div className="absolute top-2 left-2 bg-red-600/90 backdrop-blur-sm px-2 py-1 rounded-md">
+              <span className="text-xs font-semibold text-white uppercase">
+                {mediaType === 'tv' ? 'Dizi' : 'Film'}
+              </span>
+            </div>
+          )}
         </div>
 
         <div className="mt-2 space-y-1">
           <h3 className="font-semibold text-white line-clamp-1 group-hover:text-red-500 transition-colors">
-            {movie.title}
+            {title}
           </h3>
           <p className="text-sm text-zinc-400">
-            {getYear(movie.release_date)}
+            {getYear(releaseDate)}
           </p>
         </div>
       </div>

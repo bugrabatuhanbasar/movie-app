@@ -46,47 +46,68 @@ export default function WatchlistPage() {
   }
 
   return (
-    <div className="min-h-screen">
-      <div className="bg-zinc-900 border-b border-zinc-800">
-        <div className="container mx-auto px-4 py-12">
-          <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">
-            İzleme Listem
-          </h1>
-          <p className="text-zinc-400">
-            {watchlist.length > 0
-              ? `${watchlist.length} film listenizde`
-              : 'Listeniz henüz boş'}
-          </p>
+    <div className="min-h-screen pt-20">
+      {/* Hero Header */}
+      <div className="relative bg-gradient-to-b from-zinc-900 via-zinc-900/80 to-zinc-950 border-b border-zinc-800/50 overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-red-900/20 via-zinc-900/50 to-zinc-950" />
+
+        <div className="relative container mx-auto px-4 py-16">
+          <div className="max-w-4xl mx-auto text-center space-y-6">
+            <div className="inline-flex items-center gap-3 px-6 py-3 bg-red-600/20 backdrop-blur-sm rounded-full border border-red-600/30">
+              <svg className="w-6 h-6 text-red-500" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
+              </svg>
+              <span className="text-red-400 font-semibold">Favorilerim</span>
+            </div>
+
+            <h1 className="text-5xl md:text-6xl font-black text-white">
+              İzleme Listem
+            </h1>
+
+            <p className="text-xl text-zinc-400">
+              {watchlist.length > 0
+                ? `${watchlist.length} film ve dizi listenizde`
+                : 'Listeniz henüz boş'}
+            </p>
+          </div>
         </div>
       </div>
 
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-12">
         {watchlist.length === 0 ? (
-          <div className="text-center py-20">
-            <svg
-              className="w-24 h-24 mx-auto text-zinc-700 mb-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={1.5}
-                d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
-              />
-            </svg>
-            <h2 className="text-2xl font-bold text-white mb-2">
-              İzleme listeniz boş
+          <div className="max-w-2xl mx-auto text-center py-20">
+            <div className="relative inline-block mb-8">
+              <svg
+                className="w-32 h-32 text-zinc-800 relative z-10"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={1.5}
+                  d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+                />
+              </svg>
+              <div className="absolute inset-0 blur-3xl bg-red-600/10 rounded-full" />
+            </div>
+
+            <h2 className="text-3xl font-bold text-white mb-4">
+              İzleme Listeniz Boş
             </h2>
-            <p className="text-zinc-400 mb-6">
-              Film detay sayfalarından izleme listenize film ekleyebilirsiniz.
+            <p className="text-lg text-zinc-400 mb-8 max-w-md mx-auto">
+              Beğendiğiniz film ve dizileri izleme listenize ekleyerek daha sonra kolayca ulaşabilirsiniz
             </p>
+
             <Link
               href="/"
-              className="inline-block px-6 py-3 bg-red-600 hover:bg-red-700 rounded-lg text-white font-medium transition-colors"
+              className="inline-flex items-center gap-2 px-8 py-4 bg-red-600 hover:bg-red-700 rounded-xl text-white font-bold transition-all hover:scale-105 shadow-xl shadow-red-600/50"
             >
-              Film Keşfet
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+              Film ve Dizi Keşfet
             </Link>
           </div>
         ) : (

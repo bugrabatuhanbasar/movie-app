@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { tmdbFetch } from '@/lib/tmdb';
-import { TMDbResponse, Movie } from '@/types/tmdb';
+import { Credits } from '@/types/tmdb';
 
 export async function GET(
   request: NextRequest,
@@ -10,22 +10,21 @@ export async function GET(
 
   if (!id) {
     return NextResponse.json(
-      { error: 'Movie ID is required' },
+      { error: 'TV ID is required' },
       { status: 400 }
     );
   }
 
   try {
-    const data = await tmdbFetch<TMDbResponse<Movie>>({
-      endpoint: `/movie/${id}/similar`,
-      params: { page: 1 },
+    const data = await tmdbFetch<Credits>({
+      endpoint: `/tv/${id}/credits`,
     });
 
     return NextResponse.json(data);
   } catch (error) {
-    console.error('Error fetching similar movies');
+    console.error('Error fetching TV credits');
     return NextResponse.json(
-      { error: 'Failed to fetch similar movies' },
+      { error: 'Failed to fetch TV credits' },
       { status: 500 }
     );
   }

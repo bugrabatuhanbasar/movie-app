@@ -16,9 +16,11 @@ export default function RootLayout({
   return (
     <html lang="tr">
       <body className="min-h-screen bg-zinc-950 text-zinc-100">
-        <Header />
-        <main className="min-h-[calc(100vh-200px)]">{children}</main>
-        <Footer />
+        <div className="relative">
+          <Header />
+          <main>{children}</main>
+          <Footer />
+        </div>
       </body>
     </html>
   );

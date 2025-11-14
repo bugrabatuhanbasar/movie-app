@@ -49,16 +49,23 @@ export default async function HomePage() {
     getTopRatedMovies(),
   ]);
 
-  // Get a random popular movie for hero background
-  const randomMovie = popularMovies[Math.floor(Math.random() * Math.min(5, popularMovies.length))];
+  // Combine movies for hero selection
+  const allMovies = [...popularMovies.slice(0, 10), ...nowPlayingMovies.slice(0, 5)];
+  const randomMovie = allMovies[Math.floor(Math.random() * allMovies.length)];
+
+  const heroMovie = randomMovie ? {
+    id: randomMovie.id,
+    backdropPath: randomMovie.backdrop_path,
+    title: randomMovie.title,
+    overview: randomMovie.overview,
+    voteAverage: randomMovie.vote_average,
+    releaseDate: randomMovie.release_date,
+    mediaType: 'movie' as const,
+  } : null;
 
   return (
     <div className="min-h-screen">
-      <Hero
-        backdropPath={randomMovie?.backdrop_path || null}
-        title={randomMovie?.title || 'My Movies'}
-        overview={randomMovie?.overview || ''}
-      />
+      {heroMovie && <Hero movie={heroMovie} />}
 
       <div className="container mx-auto px-4 py-8 space-y-12">
         <MovieGrid movies={popularMovies.slice(0, 12)} title="Popüler Filmler" />

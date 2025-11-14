@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { tmdbFetch } from '@/lib/tmdb';
-import { TMDbResponse, Movie } from '@/types/tmdb';
+import { VideosResponse } from '@/types/tmdb';
 
 export async function GET(
   request: NextRequest,
@@ -16,16 +16,19 @@ export async function GET(
   }
 
   try {
-    const data = await tmdbFetch<TMDbResponse<Movie>>({
-      endpoint: `/movie/${id}/similar`,
-      params: { page: 1 },
+    // Fetch videos without language filter to get all available trailers
+    const data = await tmdbFetch<VideosResponse>({
+      endpoint: `/movie/${id}/videos`,
+      params: {
+        include_video_language: 'en,tr,null'  // Include English, Turkish and no language
+      },
     });
 
     return NextResponse.json(data);
   } catch (error) {
-    console.error('Error fetching similar movies');
+    console.error('Error fetching movie videos');
     return NextResponse.json(
-      { error: 'Failed to fetch similar movies' },
+      { error: 'Failed to fetch movie videos' },
       { status: 500 }
     );
   }
