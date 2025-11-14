@@ -2,20 +2,34 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Genre } from '@/types/tmdb';
+import { Genre, Movie, TVShow } from '@/types/tmdb';
+import MovieCard from '@/components/MovieCard';
+
+interface GenreWithContent {
+  genre: Genre;
+  content: (Movie | TVShow)[];
+  isLoading: boolean;
+}
 
 export default function CategoriesPage() {
   const [activeTab, setActiveTab] = useState<'movie' | 'tv'>('movie');
   const [movieGenres, setMovieGenres] = useState<Genre[]>([]);
   const [tvGenres, setTvGenres] = useState<Genre[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [genresWithContent, setGenresWithContent] = useState<GenreWithContent[]>([]);
+  const [isLoadingGenres, setIsLoadingGenres] = useState(true);
 
   useEffect(() => {
     loadGenres();
   }, []);
 
+  useEffect(() => {
+    if (movieGenres.length > 0 || tvGenres.length > 0) {
+      loadGenresContent();
+    }
+  }, [activeTab, movieGenres, tvGenres]);
+
   const loadGenres = async () => {
-    setIsLoading(true);
+    setIsLoadingGenres(true);
     try {
       const [movieRes, tvRes] = await Promise.all([
         fetch('/api/tmdb/genres'),
@@ -30,11 +44,50 @@ export default function CategoriesPage() {
     } catch (error) {
       console.error('Error loading genres');
     } finally {
-      setIsLoading(false);
+      setIsLoadingGenres(false);
     }
   };
 
-  const currentGenres = activeTab === 'movie' ? movieGenres : tvGenres;
+  const loadGenresContent = async () => {
+    const currentGenres = activeTab === 'movie' ? movieGenres : tvGenres;
+
+    // Initialize with loading state
+    const initialState: GenreWithContent[] = currentGenres.map(genre => ({
+      genre,
+      content: [],
+      isLoading: true,
+    }));
+    setGenresWithContent(initialState);
+
+    // Load content for each genre
+    currentGenres.forEach(async (genre, index) => {
+      try {
+        const res = await fetch(`/api/tmdb/discover/${activeTab}?genre=${genre.id}&page=1`);
+        const data = await res.json();
+
+        setGenresWithContent(prev => {
+          const newState = [...prev];
+          newState[index] = {
+            genre,
+            content: data.results?.slice(0, 6) || [],
+            isLoading: false,
+          };
+          return newState;
+        });
+      } catch (error) {
+        console.error(`Error loading content for genre ${genre.name}`);
+        setGenresWithContent(prev => {
+          const newState = [...prev];
+          newState[index] = {
+            genre,
+            content: [],
+            isLoading: false,
+          };
+          return newState;
+        });
+      }
+    });
+  };
 
   return (
     <div className="min-h-screen pt-16">
@@ -53,7 +106,7 @@ export default function CategoriesPage() {
 
       <div className="container mx-auto px-4 py-8">
         {/* Tabs */}
-        <div className="flex gap-4 mb-8">
+        <div className="flex gap-4 mb-12 sticky top-20 z-40 bg-zinc-950/95 backdrop-blur-md py-4 -mx-4 px-4 border-b border-zinc-800/50">
           <button
             onClick={() => setActiveTab('movie')}
             className={`relative px-8 py-4 rounded-xl font-semibold text-lg transition-all ${
@@ -88,32 +141,52 @@ export default function CategoriesPage() {
         </div>
 
         {/* Content */}
-        {isLoading ? (
+        {isLoadingGenres ? (
           <div className="flex justify-center items-center py-20">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-600"></div>
           </div>
-        ) : currentGenres.length === 0 ? (
+        ) : genresWithContent.length === 0 ? (
           <div className="text-center py-20">
             <p className="text-xl text-zinc-400">Kategoriler yüklenemedi</p>
           </div>
         ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
-            {currentGenres.map((genre) => (
-              <Link
-                key={genre.id}
-                href={`/categories/${activeTab}/${genre.id}`}
-                className="group"
-              >
-                <div className="relative overflow-hidden rounded-xl bg-zinc-800/50 backdrop-blur-sm border border-zinc-700/50 p-6 h-32 flex items-center justify-center transition-all duration-300 hover:bg-zinc-700/50 hover:border-red-600/50 hover:scale-105 hover:shadow-xl hover:shadow-red-600/20">
-                  <h3 className="text-lg font-semibold text-white text-center group-hover:text-red-400 transition-colors">
-                    {genre.name}
-                  </h3>
-
-                  {/* Decorative elements */}
-                  <div className="absolute top-0 right-0 w-20 h-20 bg-red-600/5 rounded-full blur-2xl group-hover:bg-red-600/10 transition-colors" />
-                  <div className="absolute bottom-0 left-0 w-16 h-16 bg-red-600/5 rounded-full blur-xl group-hover:bg-red-600/10 transition-colors" />
+          <div className="space-y-12">
+            {genresWithContent.map(({ genre, content, isLoading }) => (
+              <section key={genre.id} className="space-y-4">
+                {/* Genre Header */}
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-1 h-8 bg-gradient-to-b from-red-600 to-red-500 rounded-full" />
+                    <h2 className="text-3xl font-bold text-white">{genre.name}</h2>
+                  </div>
+                  <Link
+                    href={`/categories/${activeTab}/${genre.id}`}
+                    className="px-4 py-2 bg-zinc-800 hover:bg-zinc-700 text-white rounded-lg font-medium transition-colors flex items-center gap-2 group"
+                  >
+                    Tümünü Gör
+                    <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </Link>
                 </div>
-              </Link>
+
+                {/* Content Grid */}
+                {isLoading ? (
+                  <div className="flex justify-center items-center py-12">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-red-600"></div>
+                  </div>
+                ) : content.length === 0 ? (
+                  <div className="text-center py-12 text-zinc-500">
+                    Bu kategoride içerik bulunamadı
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+                    {content.map((item) => (
+                      <MovieCard key={item.id} movie={item} mediaType={activeTab} />
+                    ))}
+                  </div>
+                )}
+              </section>
             ))}
           </div>
         )}
