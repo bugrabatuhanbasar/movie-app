@@ -1,0 +1,31 @@
+import { NextRequest, NextResponse } from 'next/server';
+import { tmdbFetch } from '@/lib/tmdb';
+import { MovieDetails } from '@/types/tmdb';
+
+export async function GET(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  const { id } = params;
+
+  if (!id) {
+    return NextResponse.json(
+      { error: 'Movie ID is required' },
+      { status: 400 }
+    );
+  }
+
+  try {
+    const data = await tmdbFetch<MovieDetails>({
+      endpoint: `/movie/${id}`,
+    });
+
+    return NextResponse.json(data);
+  } catch (error) {
+    console.error('Error fetching movie details');
+    return NextResponse.json(
+      { error: 'Failed to fetch movie details' },
+      { status: 500 }
+    );
+  }
+}
