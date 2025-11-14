@@ -37,6 +37,10 @@ export default function HomeContent({
 }: HomeContentProps) {
   const [activeTab, setActiveTab] = useState<TabType>('trending');
   const [currentBannerIndex, setCurrentBannerIndex] = useState(0);
+  // Bottom banner - fixed on page load (doesn't auto-rotate)
+  const [bottomBannerMovie] = useState(() =>
+    bannerMovies.length > 0 ? bannerMovies[Math.floor(Math.random() * bannerMovies.length)] : null
+  );
 
   // Auto-rotate banner every 8 seconds
   useEffect(() => {
@@ -232,6 +236,154 @@ export default function HomeContent({
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
             </svg>
           </Link>
+        </div>
+      </div>
+
+      {/* Bottom Banner - Before Footer */}
+      {bottomBannerMovie && (
+        <div className="container mx-auto px-4 mb-0">
+          <BottomBanner movie={bottomBannerMovie} />
+        </div>
+      )}
+    </div>
+  );
+}
+
+// Bottom Banner Component
+function BottomBanner({ movie }: { movie: BannerMovie }) {
+  const [isInWatchlist, setIsInWatchlist] = useState(false);
+
+  useEffect(() => {
+    checkWatchlist();
+  }, [movie.id]);
+
+  const checkWatchlist = () => {
+    if (typeof window !== 'undefined') {
+      const watchlist = JSON.parse(localStorage.getItem('watchlist') || '[]');
+      setIsInWatchlist(watchlist.some((item: any) => item.id === movie.id));
+    }
+  };
+
+  const toggleWatchlist = () => {
+    if (typeof window !== 'undefined') {
+      const watchlist = JSON.parse(localStorage.getItem('watchlist') || '[]');
+
+      if (isInWatchlist) {
+        const updated = watchlist.filter((item: any) => item.id !== movie.id);
+        localStorage.setItem('watchlist', JSON.stringify(updated));
+        setIsInWatchlist(false);
+      } else {
+        watchlist.push({
+          id: movie.id,
+          title: movie.title,
+          poster_path: movie.posterPath,
+          vote_average: movie.voteAverage,
+          release_date: movie.releaseDate,
+        });
+        localStorage.setItem('watchlist', JSON.stringify(watchlist));
+        setIsInWatchlist(true);
+      }
+    }
+  };
+
+  return (
+    <div className="relative h-[300px] rounded-2xl overflow-hidden group">
+      {/* Background */}
+      {movie.backdropPath && (
+        <>
+          <Image
+            src={getImageUrl(movie.backdropPath, 'original')}
+            alt={movie.title}
+            fill
+            className="object-cover transition-transform duration-500 group-hover:scale-105"
+          />
+          {/* Gradient Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-r from-black via-black/80 to-transparent" />
+        </>
+      )}
+
+      {/* Content */}
+      <div className="relative h-full flex items-center">
+        <div className="px-8 md:px-12 space-y-4 max-w-2xl">
+          {/* Meta Info */}
+          <div className="flex items-center gap-3 flex-wrap">
+            <span className="px-3 py-1 bg-red-600 rounded text-white text-sm font-bold">
+              18+
+            </span>
+            <span className="text-zinc-300 font-medium">{getYear(movie.releaseDate)}</span>
+            <span className="text-zinc-400">•</span>
+            <span className="text-zinc-300">2 Sezon</span>
+            {movie.voteAverage > 0 && (
+              <>
+                <span className="text-zinc-400">•</span>
+                <div className="flex items-center gap-1">
+                  {[...Array(5)].map((_, i) => (
+                    <svg
+                      key={i}
+                      className={`w-4 h-4 ${
+                        i < Math.round(movie.voteAverage / 2)
+                          ? 'text-yellow-500'
+                          : 'text-zinc-600'
+                      }`}
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                  ))}
+                </div>
+              </>
+            )}
+          </div>
+
+          {/* Title */}
+          <h2 className="text-3xl md:text-4xl font-bold text-white drop-shadow-lg">
+            {movie.title}
+          </h2>
+
+          {/* Description */}
+          <p className="text-zinc-300 text-sm line-clamp-2 max-w-xl drop-shadow-lg">
+            {movie.overview}
+          </p>
+
+          {/* Tab - Only Bilgiler */}
+          <div className="flex gap-4 text-sm">
+            <span className="text-white font-medium border-b-2 border-white pb-1">
+              Bilgiler
+            </span>
+          </div>
+
+          {/* Action Buttons */}
+          <div className="flex gap-3 pt-2">
+            <Link
+              href={`/${movie.mediaType}/${movie.id}`}
+              className="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-all flex items-center gap-2 shadow-lg"
+            >
+              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" />
+              </svg>
+              İzle
+            </Link>
+            <button
+              onClick={toggleWatchlist}
+              className={`px-6 py-2.5 backdrop-blur-sm text-white rounded-lg font-semibold transition-all flex items-center gap-2 ${
+                isInWatchlist
+                  ? 'bg-red-600/80 hover:bg-red-700'
+                  : 'bg-zinc-800/80 hover:bg-zinc-700'
+              }`}
+            >
+              {isInWatchlist ? (
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                </svg>
+              ) : (
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                </svg>
+              )}
+              Listem
+            </button>
+          </div>
         </div>
       </div>
     </div>
