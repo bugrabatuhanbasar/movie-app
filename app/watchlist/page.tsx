@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { getImageUrl, getYear } from '@/lib/tmdb';
+import { getImageUrl, getYear } from '@/lib/tmdb-client';
 
 interface WatchlistMovie {
   id: number;

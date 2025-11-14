@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { Movie } from '@/types/tmdb';
-import { getImageUrl, getYear } from '@/lib/tmdb';
+import { getImageUrl, getYear } from '@/lib/tmdb-client';
 
 interface MovieCardProps {
   movie: Movie;

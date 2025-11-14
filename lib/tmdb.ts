@@ -1,11 +1,5 @@
+// Server-side only - for TMDb API requests
 const TMDB_BASE_URL = process.env.TMDB_BASE_URL || 'https://api.themoviedb.org/3';
-const TMDB_API_KEY = process.env.TMDB_API_KEY;
-
-if (!TMDB_API_KEY) {
-  throw new Error('TMDB_API_KEY is not defined in environment variables');
-}
-
-export const TMDB_IMAGE_BASE_URL = 'https://image.tmdb.org/t/p';
 
 interface FetchOptions {
   endpoint: string;
@@ -13,6 +7,12 @@ interface FetchOptions {
 }
 
 export async function tmdbFetch<T>({ endpoint, params = {} }: FetchOptions): Promise<T> {
+  const TMDB_API_KEY = process.env.TMDB_API_KEY;
+
+  if (!TMDB_API_KEY) {
+    throw new Error('TMDB_API_KEY is not defined in environment variables');
+  }
+
   const url = new URL(`${TMDB_BASE_URL}${endpoint}`);
 
   // Add API key and default parameters
@@ -41,20 +41,5 @@ export async function tmdbFetch<T>({ endpoint, params = {} }: FetchOptions): Pro
   }
 }
 
-export function getImageUrl(path: string | null, size: string = 'w500'): string {
-  if (!path) {
-    return '/placeholder.jpg'; // You can add a placeholder image
-  }
-  return `${TMDB_IMAGE_BASE_URL}/${size}${path}`;
-}
-
-export function getYear(dateString: string): string {
-  if (!dateString) return '';
-  return new Date(dateString).getFullYear().toString();
-}
-
-export function formatRuntime(minutes: number): string {
-  const hours = Math.floor(minutes / 60);
-  const mins = minutes % 60;
-  return `${hours}s ${mins}dk`;
-}
+// Re-export client utilities for convenience
+export { getImageUrl, getYear, formatRuntime } from './tmdb-client';

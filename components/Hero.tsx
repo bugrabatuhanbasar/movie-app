@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { getImageUrl } from '@/lib/tmdb';
+import { getImageUrl } from '@/lib/tmdb-client';
 
 interface HeroProps {
   backdropPath: string | null;
