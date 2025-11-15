@@ -34,7 +34,7 @@ export default function VideoPlayer({ movieId, type = 'movie' }: VideoPlayerProp
       );
 
       // Sort by type priority: Trailer > Teaser > Clip > others
-      const sortedVideos = allYoutubeVideos.sort((a, b) => {
+      const sortedVideos = allYoutubeVideos.sort((a: Video, b: Video) => {
         const priority: { [key: string]: number } = {
           'Trailer': 1,
           'Teaser': 2,
