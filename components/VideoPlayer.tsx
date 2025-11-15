@@ -13,8 +13,10 @@ export default function VideoPlayer({ movieId, type = 'movie' }: VideoPlayerProp
   const [selectedVideo, setSelectedVideo] = useState<Video | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [showPlayer, setShowPlayer] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
     loadVideos();
   }, [movieId, type]);
 
@@ -56,7 +58,8 @@ export default function VideoPlayer({ movieId, type = 'movie' }: VideoPlayerProp
     }
   };
 
-  if (isLoading) {
+  // Prevent hydration mismatch by not rendering until client-side mounted
+  if (!mounted || isLoading) {
     return (
       <div className="flex justify-center items-center py-8">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-red-600"></div>
