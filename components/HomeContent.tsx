@@ -82,7 +82,7 @@ export default function HomeContent({
     <div className="min-h-screen">
       {/* Banner Section */}
       {currentBanner && (
-        <div className="relative h-[600px] w-full overflow-hidden">
+        <div className="relative h-[500px] sm:h-[550px] md:h-[600px] w-full overflow-hidden">
           {/* Background */}
           {currentBanner.backdropPath && (
             <>
@@ -101,12 +101,12 @@ export default function HomeContent({
           )}
 
           {/* Content */}
-          <div className="relative h-full container mx-auto px-4 flex items-end pb-16 pt-24">
-            <div className="flex flex-col md:flex-row gap-8 items-end max-w-6xl">
+          <div className="relative h-full container mx-auto px-4 flex items-end pb-12 sm:pb-16 pt-20 sm:pt-24">
+            <div className="flex flex-col md:flex-row gap-4 sm:gap-6 md:gap-8 items-end max-w-6xl w-full">
               {/* Poster */}
               {currentBanner.posterPath && (
-                <div className="flex-shrink-0">
-                  <div className="relative w-48 md:w-56 aspect-[2/3] rounded-xl overflow-hidden shadow-2xl">
+                <div className="flex-shrink-0 hidden sm:block">
+                  <div className="relative w-40 sm:w-48 md:w-56 aspect-[2/3] rounded-xl overflow-hidden shadow-2xl">
                     <Image
                       src={getImageUrl(currentBanner.posterPath, 'w500')}
                       alt={currentBanner.title}
@@ -118,18 +118,18 @@ export default function HomeContent({
               )}
 
               {/* Info */}
-              <div className="flex-1 space-y-4 pb-4">
-                <div className="flex items-center gap-3">
-                  <span className="px-3 py-1 bg-red-600/20 border border-red-600/50 rounded-full text-red-400 text-sm font-semibold">
+              <div className="flex-1 space-y-3 sm:space-y-4 pb-4">
+                <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
+                  <span className="px-2 py-0.5 sm:px-3 sm:py-1 bg-red-600/20 border border-red-600/50 rounded-full text-red-400 text-xs sm:text-sm font-semibold">
                     18+
                   </span>
-                  <span className="text-zinc-300 font-medium">{getYear(currentBanner.releaseDate)}</span>
+                  <span className="text-zinc-300 font-medium text-sm sm:text-base">{getYear(currentBanner.releaseDate)}</span>
                   {currentBanner.voteAverage > 0 && (
-                    <div className="flex items-center gap-1">
+                    <div className="flex items-center gap-0.5 sm:gap-1">
                       {[...Array(5)].map((_, i) => (
                         <svg
                           key={i}
-                          className={`w-4 h-4 ${
+                          className={`w-3 h-3 sm:w-4 sm:h-4 ${
                             i < Math.round(currentBanner.voteAverage / 2)
                               ? 'text-yellow-500'
                               : 'text-zinc-600'
@@ -144,26 +144,26 @@ export default function HomeContent({
                   )}
                 </div>
 
-                <h1 className="text-4xl md:text-5xl font-black text-white drop-shadow-[0_4px_12px_rgba(0,0,0,0.9)]">
+                <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-white drop-shadow-[0_4px_12px_rgba(0,0,0,0.9)]">
                   {currentBanner.title}
                 </h1>
 
-                <p className="text-base text-zinc-300 line-clamp-3 max-w-2xl drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]">
+                <p className="text-sm sm:text-base text-zinc-300 line-clamp-2 sm:line-clamp-3 max-w-2xl drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]">
                   {currentBanner.overview}
                 </p>
 
-                <div className="flex gap-3 pt-2">
+                <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 pt-2">
                   <Link
                     href={`/${currentBanner.mediaType}/${currentBanner.id}`}
-                    className="px-8 py-3 bg-white hover:bg-zinc-200 text-black rounded-lg font-bold transition-all flex items-center gap-2 shadow-xl"
+                    className="px-6 py-2.5 sm:px-8 sm:py-3 bg-white hover:bg-zinc-200 text-black rounded-lg font-bold transition-all flex items-center justify-center gap-2 shadow-xl text-sm sm:text-base"
                   >
-                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                    <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="currentColor" viewBox="0 0 20 20">
                       <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" />
                     </svg>
                     İzle
                   </Link>
-                  <button className="px-6 py-3 bg-zinc-800/80 hover:bg-zinc-700 backdrop-blur-sm text-white rounded-lg font-medium transition-all flex items-center gap-2">
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <button className="px-4 py-2.5 sm:px-6 sm:py-3 bg-zinc-800/80 hover:bg-zinc-700 backdrop-blur-sm text-white rounded-lg font-medium transition-all flex items-center justify-center gap-2 text-sm sm:text-base">
+                    <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                     </svg>
                     Listem
@@ -287,7 +287,7 @@ function BottomBanner({ movie }: { movie: BannerMovie }) {
   };
 
   return (
-    <div className="relative h-[300px] rounded-2xl overflow-hidden group">
+    <div className="relative h-[250px] sm:h-[280px] md:h-[300px] rounded-2xl overflow-hidden group">
       {/* Background */}
       {movie.backdropPath && (
         <>
@@ -304,23 +304,23 @@ function BottomBanner({ movie }: { movie: BannerMovie }) {
 
       {/* Content */}
       <div className="relative h-full flex items-center">
-        <div className="px-8 md:px-12 space-y-4 max-w-2xl">
+        <div className="px-4 sm:px-6 md:px-8 lg:px-12 space-y-2 sm:space-y-3 md:space-y-4 max-w-2xl">
           {/* Meta Info */}
-          <div className="flex items-center gap-3 flex-wrap">
-            <span className="px-3 py-1 bg-red-600 rounded text-white text-sm font-bold">
+          <div className="flex items-center gap-2 sm:gap-3 flex-wrap text-xs sm:text-sm">
+            <span className="px-2 py-0.5 sm:px-3 sm:py-1 bg-red-600 rounded text-white text-xs sm:text-sm font-bold">
               18+
             </span>
             <span className="text-zinc-300 font-medium">{getYear(movie.releaseDate)}</span>
-            <span className="text-zinc-400">•</span>
-            <span className="text-zinc-300">2 Sezon</span>
+            <span className="text-zinc-400 hidden sm:inline">•</span>
+            <span className="text-zinc-300 hidden sm:inline">2 Sezon</span>
             {movie.voteAverage > 0 && (
               <>
-                <span className="text-zinc-400">•</span>
-                <div className="flex items-center gap-1">
+                <span className="text-zinc-400 hidden md:inline">•</span>
+                <div className="flex items-center gap-0.5 sm:gap-1">
                   {[...Array(5)].map((_, i) => (
                     <svg
                       key={i}
-                      className={`w-4 h-4 ${
+                      className={`w-3 h-3 sm:w-4 sm:h-4 ${
                         i < Math.round(movie.voteAverage / 2)
                           ? 'text-yellow-500'
                           : 'text-zinc-600'
@@ -337,47 +337,47 @@ function BottomBanner({ movie }: { movie: BannerMovie }) {
           </div>
 
           {/* Title */}
-          <h2 className="text-3xl md:text-4xl font-bold text-white drop-shadow-lg">
+          <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-white drop-shadow-lg">
             {movie.title}
           </h2>
 
           {/* Description */}
-          <p className="text-zinc-300 text-sm line-clamp-2 max-w-xl drop-shadow-lg">
+          <p className="text-zinc-300 text-xs sm:text-sm line-clamp-2 max-w-xl drop-shadow-lg hidden sm:block">
             {movie.overview}
           </p>
 
           {/* Tab - Only Bilgiler */}
-          <div className="flex gap-4 text-sm">
+          <div className="flex gap-4 text-xs sm:text-sm hidden md:flex">
             <span className="text-white font-medium border-b-2 border-white pb-1">
               Bilgiler
             </span>
           </div>
 
           {/* Action Buttons */}
-          <div className="flex gap-3 pt-2">
+          <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 pt-1 sm:pt-2">
             <Link
               href={`/${movie.mediaType}/${movie.id}`}
-              className="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-all flex items-center gap-2 shadow-lg"
+              className="px-4 py-2 sm:px-6 sm:py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-all flex items-center justify-center gap-2 shadow-lg text-xs sm:text-sm"
             >
-              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+              <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" />
               </svg>
               İzle
             </Link>
             <button
               onClick={toggleWatchlist}
-              className={`px-6 py-2.5 backdrop-blur-sm text-white rounded-lg font-semibold transition-all flex items-center gap-2 ${
+              className={`px-4 py-2 sm:px-6 sm:py-2.5 backdrop-blur-sm text-white rounded-lg font-semibold transition-all flex items-center justify-center gap-2 text-xs sm:text-sm ${
                 isInWatchlist
                   ? 'bg-red-600/80 hover:bg-red-700'
                   : 'bg-zinc-800/80 hover:bg-zinc-700'
               }`}
             >
               {isInWatchlist ? (
-                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                 </svg>
               ) : (
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                 </svg>
               )}

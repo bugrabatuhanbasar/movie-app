@@ -89,7 +89,7 @@ export default async function TVPage({ params }: TVPageProps) {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <div className="relative h-[500px] md:h-[600px] w-full overflow-hidden">
+      <div className="relative h-[450px] sm:h-[500px] md:h-[600px] w-full overflow-hidden">
         {tvShow.backdrop_path && (
           <>
             <Image
@@ -104,12 +104,12 @@ export default async function TVPage({ params }: TVPageProps) {
           </>
         )}
 
-        <div className="relative h-full container mx-auto px-4 flex items-end pb-12 pt-16">
-          <div className="flex flex-col md:flex-row gap-8 w-full">
+        <div className="relative h-full container mx-auto px-4 flex items-end pb-8 sm:pb-12 pt-20">
+          <div className="flex flex-col md:flex-row gap-4 sm:gap-6 md:gap-8 w-full">
             {/* Poster */}
             {tvShow.poster_path && (
-              <div className="flex-shrink-0">
-                <div className="relative w-48 md:w-64 aspect-[2/3] rounded-lg overflow-hidden shadow-2xl">
+              <div className="flex-shrink-0 hidden sm:block">
+                <div className="relative w-40 sm:w-48 md:w-64 aspect-[2/3] rounded-lg overflow-hidden shadow-2xl">
                   <Image
                     src={getImageUrl(tvShow.poster_path, 'w500')}
                     alt={tvShow.name}
@@ -121,28 +121,28 @@ export default async function TVPage({ params }: TVPageProps) {
             )}
 
             {/* Info */}
-            <div className="flex-1 space-y-4">
-              <div className="inline-block px-3 py-1 bg-red-600/20 border border-red-600/50 rounded-full text-red-400 font-medium text-sm mb-2">
+            <div className="flex-1 space-y-3 sm:space-y-4">
+              <div className="inline-block px-2 py-0.5 sm:px-3 sm:py-1 bg-red-600/20 border border-red-600/50 rounded-full text-red-400 font-medium text-xs sm:text-sm mb-2">
                 Dizi
               </div>
 
-              <h1 className="text-4xl md:text-5xl font-bold text-white">
+              <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white">
                 {tvShow.name}
               </h1>
 
               {tvShow.tagline && (
-                <p className="text-lg italic text-zinc-300">{tvShow.tagline}</p>
+                <p className="text-sm sm:text-base md:text-lg italic text-zinc-300">{tvShow.tagline}</p>
               )}
 
-              <div className="flex flex-wrap items-center gap-4 text-sm">
-                <div className="flex items-center gap-1 bg-yellow-500/20 px-3 py-1 rounded-full">
-                  <svg className="w-5 h-5 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
+              <div className="flex flex-wrap items-center gap-2 sm:gap-3 md:gap-4 text-xs sm:text-sm">
+                <div className="flex items-center gap-1 bg-yellow-500/20 px-2 py-1 sm:px-3 rounded-full">
+                  <svg className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
                     <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                   </svg>
                   <span className="font-semibold text-yellow-500">
                     {tvShow.vote_average.toFixed(1)}/10
                   </span>
-                  <span className="text-zinc-400">({tvShow.vote_count} oy)</span>
+                  <span className="text-zinc-400 hidden sm:inline">({tvShow.vote_count} oy)</span>
                 </div>
 
                 {tvShow.first_air_date && (
@@ -154,7 +154,7 @@ export default async function TVPage({ params }: TVPageProps) {
                 )}
 
                 {tvShow.number_of_episodes > 0 && (
-                  <span className="text-zinc-300">{tvShow.number_of_episodes} Bölüm</span>
+                  <span className="text-zinc-300 hidden sm:inline">{tvShow.number_of_episodes} Bölüm</span>
                 )}
               </div>
 
@@ -163,7 +163,7 @@ export default async function TVPage({ params }: TVPageProps) {
                   {tvShow.genres.map((genre) => (
                     <span
                       key={genre.id}
-                      className="px-3 py-1 bg-zinc-800/80 backdrop-blur-sm rounded-full text-sm text-zinc-300"
+                      className="px-2 py-1 sm:px-3 bg-zinc-800/80 backdrop-blur-sm rounded-full text-xs sm:text-sm text-zinc-300"
                     >
                       {genre.name}
                     </span>
@@ -186,16 +186,16 @@ export default async function TVPage({ params }: TVPageProps) {
       </div>
 
       {/* Content */}
-      <div className="container mx-auto px-4 py-12 space-y-12">
+      <div className="container mx-auto px-4 py-8 sm:py-12 space-y-8 sm:space-y-12">
         {/* Overview */}
         {tvShow.overview && (
           <section>
-            <div className="bg-gradient-to-br from-zinc-900/50 to-zinc-800/30 backdrop-blur-sm border border-zinc-800/50 rounded-2xl p-8 shadow-xl">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-1 h-8 bg-gradient-to-b from-red-600 to-red-500 rounded-full" />
-                <h2 className="text-3xl font-bold text-white">Hikaye</h2>
+            <div className="bg-gradient-to-br from-zinc-900/50 to-zinc-800/30 backdrop-blur-sm border border-zinc-800/50 rounded-xl sm:rounded-2xl p-4 sm:p-6 md:p-8 shadow-xl">
+              <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6">
+                <div className="w-1 h-6 sm:h-8 bg-gradient-to-b from-red-600 to-red-500 rounded-full" />
+                <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-white">Hikaye</h2>
               </div>
-              <p className="text-lg text-zinc-300 leading-relaxed">
+              <p className="text-sm sm:text-base md:text-lg text-zinc-300 leading-relaxed">
                 {tvShow.overview}
               </p>
             </div>
@@ -208,15 +208,15 @@ export default async function TVPage({ params }: TVPageProps) {
         {/* Cast */}
         {cast.length > 0 && (
           <section>
-            <div className="flex items-center gap-3 mb-6">
-              <div className="w-1 h-8 bg-gradient-to-b from-red-600 to-red-500 rounded-full" />
-              <h2 className="text-3xl font-bold text-white">Oyuncular</h2>
+            <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6">
+              <div className="w-1 h-6 sm:h-8 bg-gradient-to-b from-red-600 to-red-500 rounded-full" />
+              <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-white">Oyuncular</h2>
             </div>
 
             <div className="relative">
-              <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide snap-x snap-mandatory">
+              <div className="flex gap-3 sm:gap-4 overflow-x-auto pb-4 scrollbar-hide snap-x snap-mandatory">
                 {cast.map((person) => (
-                  <div key={person.id} className="flex-shrink-0 w-32 snap-start group">
+                  <div key={person.id} className="flex-shrink-0 w-24 sm:w-28 md:w-32 snap-start group">
                     <div className="relative aspect-[2/3] bg-zinc-800 rounded-xl overflow-hidden shadow-lg transition-transform duration-300 group-hover:scale-105">
                       {person.profile_path ? (
                         <Image
@@ -251,11 +251,11 @@ export default async function TVPage({ params }: TVPageProps) {
         {/* Similar Shows */}
         {similarShows.length > 0 && (
           <section>
-            <div className="flex items-center gap-3 mb-6">
-              <div className="w-1 h-8 bg-gradient-to-b from-red-600 to-red-500 rounded-full" />
-              <h2 className="text-3xl font-bold text-white">Benzer Diziler</h2>
+            <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6">
+              <div className="w-1 h-6 sm:h-8 bg-gradient-to-b from-red-600 to-red-500 rounded-full" />
+              <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-white">Benzer Diziler</h2>
             </div>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4">
               {similarShows.slice(0, 12).map((similarShow) => (
                 <MovieCard key={similarShow.id} movie={similarShow} mediaType="tv" />
               ))}
